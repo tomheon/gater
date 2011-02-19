@@ -38,11 +38,14 @@ class Switcher
 
   def branch(criteria = nil, &block)
     @branches ||= {}
-    # use nil to indicate the "default" branch?
-    if !criteria.nil? and !criteria.kind_of?(Array)
-      criteria = [criteria]
-      @branches[criteria] = block
+
+    if criteria.nil?
+        criteria = []
+    elsif not criteria.kind_of? Array
+        criteria = [ criteria ]
     end
+
+    @branches[criteria] = block
   end
 
   def run_most_specific_match(active_gates)
