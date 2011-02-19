@@ -1,1 +1,3 @@
 
+Very primitive version with example. Run "ruby example.rb" to try. Use RAILS_ENV=production for different gates.
+
