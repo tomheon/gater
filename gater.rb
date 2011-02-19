@@ -1,12 +1,29 @@
+require 'yaml'
+
 class Gater
+
+  RAILS_ENV = ENV['RAILS_ENV'] || 'development'
+
+  def initialize
+    read_conf
+  end
 
   def read_conf()
     # get the features that are active etc.
+    # TODO: support DB configs
+    # TODO: load the file from #{RAILS_ROOT}/config/gates.yml
+    # TODO: support (auto?) reloading
+    config = YAML.load_file("gates.yml")
+
+    # Consider it an error if an environment is unknown
+    raise "Unknown environment #{ RAILS_ENV } in gates.yml" unless config.has_key? RAILS_ENV
+
+    # Import gates for the current environment, defaulting to those in 'common'
+    @known_gates = config['common'].merge( config[RAILS_ENV] || {} )
   end
 
   def active_gates()
-    # get from conf
-    []
+    @known_gates.select { |k,v| v }.map { |x| x[0] }
   end
 
   def junction()
