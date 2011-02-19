@@ -2,8 +2,6 @@ require 'gater'
 
 g = Gater.new
 
-puts "Active Gates: #{ g.active_gates.inspect }"
-
 g.junction do |switcher|
     switcher.branch :feature1 do |reporter|
         puts "Feature 1 is active"
@@ -21,4 +19,6 @@ g.junction do |switcher|
         puts "Feature 3 is active"
     end
 end
+
+# TODO: examples for mutex logic
 

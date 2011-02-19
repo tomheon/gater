@@ -50,14 +50,24 @@ class Switcher
     @branches.each do |criteria, block|
       if criteria.nil?
         possible_branches << [0, block]
-      elsif criteria.all? {|c| active_gates.include?(c)}
+      elsif criteria.all? {|c| active_gates.include?( c.to_s )}
         possible_branches << [criteria.length, block]
       end
     end
 
-    # find the max val in possible branches
-    # raise if there is any ambiguity (if two matches are the most specific)
-    # otherwise execute block
+    # if there's a possible branch...
+    if possible_branches.length > 0
+      # find the max val in possible branches
+      max_val = possible_branches.map { |x| x[0] }.max
+
+      # raise if there is any ambiguity (if two matches are the most specific)
+      best_branches = possible_branches.select { |x| x[0] == max_val }
+      raise "Ambiguous gates in junction: #{ best_branches.inspect }" if best_branches.length != 1
+
+      # otherwise execute block
+      best_branches[0][1].call nil # TODO add reporter
+    end
   end
 
 end
+
