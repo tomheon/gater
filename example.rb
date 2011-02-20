@@ -1,4 +1,4 @@
-require 'gater'
+require 'lib/gater'
 
 Gater.junction do |switcher|
     switcher.branch :feature1 do |reporter|
