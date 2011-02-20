@@ -4,29 +4,31 @@ class Gater
 
   RAILS_ENV = ENV['RAILS_ENV'] || 'development'
 
-  def initialize
-    read_conf
-  end
+  @@known_gates = nil
+  @@config = nil
 
-  def read_conf()
+  def self.read_conf()
     # get the features that are active etc.
     # TODO: support DB configs
     # TODO: load the file from #{RAILS_ROOT}/config/gates.yml
     # TODO: support (auto?) reloading
-    config = YAML.load_file("gates.yml")
+    @@config = YAML.load_file("gates.yml")
 
     # Consider it an error if an environment is unknown
-    raise "Unknown environment #{ RAILS_ENV } in gates.yml" unless config.has_key? RAILS_ENV
+    raise "Unknown environment #{ RAILS_ENV } in gates.yml" unless @@config.has_key? RAILS_ENV
 
     # Import gates for the current environment, defaulting to those in 'common'
-    @known_gates = config['common'].merge( config[RAILS_ENV] || {} )
+    @@known_gates = @@config['common'].merge( @@config[RAILS_ENV] || {} )
   end
 
-  def active_gates()
-    @known_gates.select { |k,v| v }.map { |x| x[0] }
+  def self.active_gates()
+    if @@known_gates.nil?
+      read_conf()
+    end
+    @@known_gates.select { |k,v| v }.map { |x| x[0] }
   end
 
-  def junction()
+  def self.junction()
     switcher = Switcher.new()
     yield switcher
     switcher.run_most_specific_match(active_gates)

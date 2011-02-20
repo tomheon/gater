@@ -1,8 +1,6 @@
 require 'gater'
 
-g = Gater.new
-
-g.junction do |switcher|
+Gater.junction do |switcher|
     switcher.branch :feature1 do |reporter|
         puts "Feature 1 is active"
     end
@@ -12,7 +10,7 @@ g.junction do |switcher|
     end
 end
 
-g.junction do |switcher|
+Gater.junction do |switcher|
     switcher.branch :feature2 do |reporter|
         puts "Feature 2 is active"
     end
