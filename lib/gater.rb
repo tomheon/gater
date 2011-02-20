@@ -34,13 +34,19 @@ class Gater
     switcher.run_most_specific_match(active_gates)
   end
 
+  def self.known_gates=(known_gates)
+    @@known_gates = known_gates
+  end
+
 end
 
 class Switcher
 
-  def branch(criteria = nil, &block)
-    @branches ||= {}
+  def initialize()
+    @branches = {}
+  end
 
+  def branch(criteria = nil, &block)
     if criteria.nil?
         criteria = []
     elsif not criteria.kind_of? Array
