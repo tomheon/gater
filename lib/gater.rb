@@ -25,7 +25,7 @@ class Gater
     if @@known_gates.nil?
       read_conf()
     end
-    @@known_gates.select { |k,v| v }.map { |x| x[0] }
+    @@known_gates.select { |k,v| v }.map { |x| x[0].to_sym }
   end
 
   def self.junction()
@@ -61,7 +61,7 @@ class Switcher
     @branches.each do |criteria, block|
       if criteria.nil?
         possible_branches << [0, block]
-      elsif criteria.all? {|c| active_gates.include?( c.to_s )}
+      elsif criteria.all? {|c| active_gates.include?( c.to_sym )}
         possible_branches << [criteria.length, block]
       end
     end
